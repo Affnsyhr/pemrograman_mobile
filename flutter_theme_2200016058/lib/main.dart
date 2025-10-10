@@ -9,45 +9,55 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const appName = 'Dashboard Penjualan';
+    const appName = 'Test App Theme';
 
     return MaterialApp(
       title: appName,
 
-      // 🌈 LANGKAH 1: Buat Tema
+      // 🌞 Tema terang (default)
       theme: ThemeData(
-        // Tema untuk FloatingActionButton
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: Colors.red,
         ),
-
-        // Tema untuk AppBar (judul & warna icon)
-        appBarTheme: const AppBarTheme(
-          foregroundColor: Colors.white, // warna teks AppBar
-        ),
-
-        // Brightness (mode terang atau gelap)
+        appBarTheme: const AppBarTheme(foregroundColor: Colors.white),
         brightness: Brightness.light,
-
-        // Warna utama
         primaryColor: Colors.green,
-
-        // ColorScheme (kombinasi warna utama dan sekunder)
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.green,
           secondary: Colors.deepOrangeAccent,
+          brightness: Brightness.light,
         ),
-
-        // Font default
         fontFamily: 'Georgia',
-
-        // TextTheme (mengatur ukuran dan gaya teks)
         textTheme: const TextTheme(
           displayLarge: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
           titleLarge: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
           bodyMedium: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
         ),
       ),
+
+      // 🌙 Tema gelap
+      darkTheme: ThemeData(
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Colors.orange,
+        ),
+        appBarTheme: const AppBarTheme(foregroundColor: Colors.white),
+        brightness: Brightness.dark,
+        primaryColor: Colors.blueGrey,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blueGrey,
+          secondary: Colors.tealAccent,
+          brightness: Brightness.dark,
+        ),
+        fontFamily: 'Georgia',
+        textTheme: const TextTheme(
+          displayLarge: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+          titleLarge: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+          bodyMedium: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+        ),
+      ),
+
+      // ⚡ Gunakan mode sesuai sistem HP (otomatis)
+      themeMode: ThemeMode.system,
 
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(title: appName),
@@ -62,13 +72,12 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // 🌿 AppBar dengan warna dari tema
+      // AppBar pakai warna sesuai tema aktif
       appBar: AppBar(
         title: Text(title),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
 
-      // 🌿 Body pakai warna sekunder dari tema
       body: Center(
         child: Container(
           color: Theme.of(context).colorScheme.secondary,
@@ -80,12 +89,11 @@ class MyHomePage extends StatelessWidget {
         ),
       ),
 
-      // 🌿 Floating Action Button pakai tema
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          debugPrint('Tombol ditekan!');
+          debugPrint('FAB ditekan!');
         },
-        child: const Icon(Icons.arrow_circle_up),
+        child: const Icon(Icons.brightness_6),
       ),
     );
   }
