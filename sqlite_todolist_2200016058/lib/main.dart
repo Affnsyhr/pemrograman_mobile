@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'database_helper.dart';
 import 'user.dart';
+import 'home.dart';
 
 // Fungsi main diubah menjadi async untuk menunggu inisialisasi database
 void main() async {
@@ -9,7 +10,7 @@ void main() async {
 
   // Inisialisasi database dan tambahkan data awal
   // Kita panggil initDb untuk memastikan database sudah ada
-  await DatabaseHelper.instance.db; 
+  await DatabaseHelper.instance.db;
   await DatabaseHelper.instance.initializeUsers();
 
   runApp(MyApp());
@@ -19,10 +20,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'SQLite User Management',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
+      title: 'Tambahkan daftar',
+      theme: ThemeData(primarySwatch: Colors.green),
       home: UserList(),
     );
   }
@@ -48,7 +47,7 @@ class _UserListState extends State<UserList> {
   Future<void> _fetchUsers() async {
     // Ambil data dalam bentuk List<Map>
     final userMaps = await DatabaseHelper.instance.queryAllUsers();
-    
+
     // Perbarui state dengan data baru yang sudah diubah menjadi List<User>
     setState(() {
       _users = userMaps.map((userMap) => User.fromMap(userMap)).toList();
@@ -65,7 +64,8 @@ class _UserListState extends State<UserList> {
       body: ListView.builder(
         itemCount: _users.length,
         itemBuilder: (context, index) {
-          return Card( // Menggunakan Card untuk tampilan yang lebih baik
+          return Card(
+            // Menggunakan Card untuk tampilan yang lebih baik
             margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             child: ListTile(
               leading: CircleAvatar(
