@@ -1,0 +1,76 @@
+# ------------------------
+# OS / Editor generated
+# ------------------------
+.DS_Store
+Thumbs.db
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.log
+*.swp
+*.tmp
+
+# ------------------------
+# Flutter / Dart / Build
+# ------------------------
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+coverage/
+.melos_tool/
+analysis_options.yaml
+
+# ------------------------
+# iOS / macOS
+# ------------------------
+**/ios/Flutter/.last_build_id
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral/
+**/ios/Runner.xcworkspace/
+**/macos/Pods/
+**/macos/Flutter/ephemeral/
+
+# ------------------------
+# Android
+# ------------------------
+**/android/.gradle/
+**/android/app/debug/
+**/android/app/profile/
+**/android/app/release/
+**/android/local.properties
+**/android/key.properties
+**/android/app/google-services.json
+
+# ------------------------
+# Web
+# ------------------------
+**/web/.firebase/
+**/web/manifest.json
+**/web/firebase-messaging-sw.js
+
+# ------------------------
+# Firebase / Secrets
+# ------------------------
+google-services.json
+GoogleService-Info.plist
+firebase_options.dart
+.env
+*.env
+*.keystore
+*.pem
+
+# ------------------------
+# Miscellaneous
+# ------------------------
+migrate_working_dir/
+app.*.map.json
+app.*.symbols
+*.lock
