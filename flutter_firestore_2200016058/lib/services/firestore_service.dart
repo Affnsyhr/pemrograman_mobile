@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import '../models/task.dart';
+// import '../models/user_model.dart';
 
 class FirestoreService {
   final user = FirebaseAuth.instance.currentUser!;
