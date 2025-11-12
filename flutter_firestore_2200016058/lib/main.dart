@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'services/auth_service.dart';
-import 'services/firestore_service.dart';
-import 'pages/home_page.dart';
-import 'pages/login_page.dart';
+
 import 'firebase_options.dart';
 import 'models/user_model.dart';
+import 'pages/home_page.dart';
+import 'pages/login_page.dart';
+import 'providers/auth_provider.dart';
+import 'providers/task_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,16 +22,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider<AuthService>(
-      create: (_) => AuthService(),
-
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => TaskProvider()),
+      ],
       child: MaterialApp(
         title: 'To-Do List with Auth',
-
         debugShowCheckedModeBanner: false,
-
         theme: ThemeData(primarySwatch: Colors.indigo, useMaterial3: true),
-
         home: const AuthWrapper(),
       ),
     );
@@ -42,34 +42,28 @@ class AuthWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authService = Provider.of<AuthService>(context);
+    return Consumer<AuthProvider>(
+      builder: (context, authProvider, _) {
+        return StreamBuilder<UserModel?>(
+          stream: authProvider.userStream,
+          builder: (context, snapshot) {
+            // Loading state
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
+            }
 
-    return StreamBuilder<UserModel?>(
-      stream: authService.user,
+            final user = snapshot.data;
 
-      builder: (context, snapshot) {
-        // Loading state
+            // Jika belum login, tampilkan LoginPage
+            if (user == null) {
+              return const LoginPage();
+            }
 
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
-
-        final user = snapshot.data;
-
-        // Jika belum login, tampilkan LoginPage
-
-        if (user == null) {
-          return const LoginPage();
-        }
-
-        // Jika sudah login, tampilkan HomePage dengan FirestoreService
-
-        return Provider<FirestoreService>(
-          create: (_) => FirestoreService(),
-
-          child: HomePage(),
+            // Jika sudah login, tampilkan HomePage
+            return HomePage();
+          },
         );
       },
     );
