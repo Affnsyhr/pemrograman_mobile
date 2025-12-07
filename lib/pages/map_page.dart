@@ -115,61 +115,11 @@ class _MapPageState extends State<MapPage> {
               }
               if (!mounted) return;
 
-              final nameController = TextEditingController();
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text("Rekomendasi Kuliner"),
-                  content: TextField(
-                    controller: nameController,
-                    decoration: const InputDecoration(
-                      hintText: "Misal: Nasi Goreng Pak Kumis",
-                      labelText: "Nama Tempat / Menu",
-                      icon: Icon(Icons.fastfood, color: Colors.orange),
-                    ),
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text("Batal"),
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
-                      ),
-                      onPressed: () async {
-                        Navigator.pop(context);
-                        if (nameController.text.isEmpty) return;
-
-                        final newLoc = LocationModel(
-                          id: '',
-                          name: nameController.text,
-                          description: '',
-                          latitude: position.latitude,
-                          longitude: position.longitude,
-                        );
-
-                        bool success = await _apiService.addLocation(newLoc);
-                        if (success) {
-                          _fetchLocations();
-                          _mapController.move(
-                            LatLng(position.latitude, position.longitude),
-                            15,
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Rekomendasi berhasil disimpan!"),
-                            ),
-                          );
-                        }
-                      },
-                      child: const Text(
-                        "Simpan",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
+              // Open the same modal bottom sheet used for map picking,
+              // pre-centered on the obtained GPS location so user can
+              // enter the name and confirm.
+              await _showMapPicker(
+                LatLng(position.latitude, position.longitude),
               );
             },
             child: const Text("Gunakan GPS"),
@@ -190,8 +140,8 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
-  Future<void> _showMapPicker() async {
-    LatLng selected = _currentCenter;
+  Future<void> _showMapPicker([LatLng? initial]) async {
+    LatLng selected = initial ?? _currentCenter;
     final pickerController = MapController();
     final nameController = TextEditingController();
 
