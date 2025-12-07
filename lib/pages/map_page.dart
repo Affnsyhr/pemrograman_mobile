@@ -33,42 +33,76 @@ class _MapPageState extends State<MapPage> {
         _markers = locations.map((loc) {
           return Marker(
             point: LatLng(loc.latitude, loc.longitude),
-            width: 100,
-            height: 80,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.restaurant, color: Colors.orange, size: 35),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: const [
-                      BoxShadow(blurRadius: 3, color: Colors.black26),
-                    ],
-                  ),
-                  child: Text(
-                    loc.name,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
+            width: 120,
+            height: 100,
+            child: GestureDetector(
+              onTap: () {
+                _mapController.move(LatLng(loc.latitude, loc.longitude), 16);
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Custom animated marker icon
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.orange,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.orange.withOpacity(0.5),
+                          blurRadius: 12,
+                          spreadRadius: 2,
+                        ),
+                      ],
                     ),
-                    overflow: TextOverflow.ellipsis,
+                    padding: const EdgeInsets.all(8),
+                    child: const Icon(
+                      Icons.restaurant,
+                      color: Colors.white,
+                      size: 28,
+                    ),
                   ),
-                ),
-              ],
+                  Container(
+                    margin: const EdgeInsets.only(top: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.15),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      loc.name,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         }).toList();
       });
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+          backgroundColor: Colors.red.shade700,
+        ),
+      );
     }
   }
 
@@ -77,14 +111,26 @@ class _MapPageState extends State<MapPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Sumber Lokasi"),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text(
+          "Sumber Lokasi",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            color: Colors.orange,
+          ),
+        ),
         content: const Text(
           "Pilih sumber lokasi: gunakan GPS atau pilih di peta.",
+          style: TextStyle(fontSize: 14, color: Colors.grey),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Batal"),
+            child: const Text(
+              "Batal",
+              style: TextStyle(color: Colors.grey, fontSize: 14),
+            ),
           ),
           TextButton(
             onPressed: () async {
@@ -104,10 +150,12 @@ class _MapPageState extends State<MapPage> {
                 // On web the user may deny geolocation — fall back to map picker
                 if (!mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
+                  SnackBar(
+                    content: const Text(
                       'Tidak dapat mendapatkan lokasi GPS. Silakan pilih lokasi di peta.',
                     ),
+                    backgroundColor: Colors.orange.shade700,
+                    duration: const Duration(seconds: 3),
                   ),
                 );
                 _showMapPicker();
@@ -122,17 +170,33 @@ class _MapPageState extends State<MapPage> {
                 LatLng(position.latitude, position.longitude),
               );
             },
-            child: const Text("Gunakan GPS"),
+            child: const Text(
+              "Gunakan GPS",
+              style: TextStyle(
+                color: Colors.orange,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
             onPressed: () {
               Navigator.pop(context);
               _showMapPicker();
             },
             child: const Text(
               "Pilih di Peta",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],
@@ -148,6 +212,9 @@ class _MapPageState extends State<MapPage> {
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setState) {
@@ -155,29 +222,110 @@ class _MapPageState extends State<MapPage> {
               height: MediaQuery.of(context).size.height * 0.9,
               child: Column(
                 children: [
+                  // Handle bar
+                  Container(
+                    margin: const EdgeInsets.only(top: 8),
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade400,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  // Header
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 16,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Tambah Rekomendasi Kuliner',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Koordinat: ${selected.latitude.toStringAsFixed(5)}, ${selected.longitude.toStringAsFixed(5)}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Input section
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     child: Row(
                       children: [
                         Expanded(
                           child: TextField(
                             controller: nameController,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               hintText: 'Nama tempat / menu',
-                              prefixIcon: Icon(
+                              hintStyle: TextStyle(color: Colors.grey.shade400),
+                              prefixIcon: const Icon(
                                 Icons.fastfood,
                                 color: Colors.orange,
+                                size: 22,
                               ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  color: Colors.orange,
+                                  width: 2,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                vertical: 12,
+                              ),
+                              filled: true,
+                              fillColor: Colors.grey.shade50,
                             ),
+                            style: const TextStyle(fontSize: 14),
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        ElevatedButton(
+                        const SizedBox(width: 12),
+                        ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.orange,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 12,
+                            ),
+                            elevation: 2,
                           ),
                           onPressed: () async {
-                            if (nameController.text.isEmpty) return;
+                            if (nameController.text.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: const Text(
+                                    'Masukkan nama tempat/menu terlebih dahulu',
+                                  ),
+                                  backgroundColor: Colors.red.shade700,
+                                ),
+                              );
+                              return;
+                            }
                             final newLoc = LocationModel(
                               id: '',
                               name: nameController.text,
@@ -190,26 +338,33 @@ class _MapPageState extends State<MapPage> {
                             );
                             if (success) {
                               if (!mounted) return;
-                              Navigator.pop(context); // close bottom sheet
+                              Navigator.pop(context);
                               _fetchLocations();
                               _mapController.move(selected, 15);
                               ScaffoldMessenger.of(this.context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
+                                SnackBar(
+                                  content: const Text(
                                     'Rekomendasi berhasil disimpan!',
                                   ),
+                                  backgroundColor: Colors.green.shade700,
+                                  duration: const Duration(seconds: 2),
                                 ),
                               );
                             }
                           },
-                          child: const Text(
-                            'Konfirmasi',
-                            style: TextStyle(color: Colors.white),
+                          icon: const Icon(Icons.check, size: 18),
+                          label: const Text(
+                            'Simpan',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
+                  // Map area
                   Expanded(
                     child: FlutterMap(
                       mapController: pickerController,
@@ -232,12 +387,53 @@ class _MapPageState extends State<MapPage> {
                           markers: [
                             Marker(
                               point: selected,
-                              width: 60,
-                              height: 60,
-                              child: const Icon(
-                                Icons.location_on,
-                                color: Colors.red,
-                                size: 48,
+                              width: 80,
+                              height: 80,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  // Custom animated marker
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.red,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.red.withOpacity(0.5),
+                                          blurRadius: 16,
+                                          spreadRadius: 4,
+                                        ),
+                                      ],
+                                    ),
+                                    padding: const EdgeInsets.all(10),
+                                    child: const Icon(
+                                      Icons.location_on,
+                                      color: Colors.white,
+                                      size: 32,
+                                    ),
+                                  ),
+                                  // Arrow pointing down
+                                  Container(
+                                    width: 0,
+                                    height: 0,
+                                    decoration: const BoxDecoration(
+                                      border: Border(
+                                        left: BorderSide(
+                                          width: 8,
+                                          color: Colors.transparent,
+                                        ),
+                                        right: BorderSide(
+                                          width: 8,
+                                          color: Colors.transparent,
+                                        ),
+                                        top: BorderSide(
+                                          width: 12,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -245,13 +441,37 @@ class _MapPageState extends State<MapPage> {
                       ],
                     ),
                   ),
-                  Padding(
+                  // Info section
+                  Container(
                     padding: const EdgeInsets.symmetric(
-                      vertical: 8.0,
-                      horizontal: 12.0,
+                      vertical: 12,
+                      horizontal: 16,
                     ),
-                    child: Text(
-                      'Ketuk peta untuk memindahkan marker. Koordinat: ${selected.latitude.toStringAsFixed(5)}, ${selected.longitude.toStringAsFixed(5)}',
+                    decoration: BoxDecoration(
+                      color: Colors.orange.shade50,
+                      border: Border(
+                        top: BorderSide(color: Colors.orange.shade200),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.info_outline,
+                          color: Colors.orange.shade700,
+                          size: 18,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Ketuk peta untuk memindahkan marker ke lokasi yang diinginkan',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.orange.shade800,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -267,13 +487,18 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('KulinerHunt'),
+        title: const Text(
+          '🍴 KulinerHunt',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
         backgroundColor: Colors.orange,
         foregroundColor: Colors.white,
+        elevation: 4,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh, size: 24),
             onPressed: _fetchLocations,
+            tooltip: 'Refresh lokasi',
           ),
         ],
       ),
@@ -299,11 +524,20 @@ class _MapPageState extends State<MapPage> {
             child: FloatingActionButton.extended(
               onPressed: _addRecommendation,
               backgroundColor: Colors.orange,
+              elevation: 6,
               label: const Text(
-                "Rekomendasiin!",
-                style: TextStyle(color: Colors.white),
+                "Tambah Lokasi",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
               ),
-              icon: const Icon(Icons.add_location_alt, color: Colors.white),
+              icon: const Icon(
+                Icons.add_location_alt,
+                color: Colors.white,
+                size: 22,
+              ),
             ),
           ),
         ],

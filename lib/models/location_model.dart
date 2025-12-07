@@ -15,11 +15,13 @@ class LocationModel {
 
   factory LocationModel.fromJson(Map<String, dynamic> json) {
     return LocationModel(
-      id: json['id'],
-      name: json['name'],
-      description: json['description'],
-      latitude: json['latitude'],
-      longitude: json['longitude'],
+      id: json['id'] ?? '',
+      name: json['name'] ?? 'Unknown',
+      description: json['description'] ?? '',
+      // Parse latitude safely from various data types (string, int, double)
+      latitude: double.tryParse(json['latitude'].toString()) ?? 0.0,
+      // Parse longitude safely from various data types (string, int, double)
+      longitude: double.tryParse(json['longitude'].toString()) ?? 0.0,
     );
   }
 
