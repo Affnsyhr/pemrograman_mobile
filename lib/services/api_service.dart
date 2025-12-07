@@ -4,7 +4,7 @@ import '../models/location_model.dart';
 
 class ApiService {
   static const String _baseURL =
-      'https://692e6ee091e00bafccd3d946.mockapi.io/locations/locations'; //Ganti Dengan URL MOCKAPI KELAS
+      'https://692e6ee091e00bafccd3d946.mockapi.io/locations/Kelas'; //Ganti Dengan URL MOCKAPI KELAS
 
   // GET : Ambil daftar tempat makan
   Future<List<LocationModel>> getLocations() async {
