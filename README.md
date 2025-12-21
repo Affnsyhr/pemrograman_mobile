@@ -39,51 +39,6 @@ Aplikasi Point of Sale (POS) yang elegan dan modern untuk mengelola transaksi pe
 - Animasi smooth dan feedback visual
 - Typography yang konsisten dan readable
 
-## 🏗️ **Arsitektur Aplikasi**
-
-```
-lib/
-├── main.dart              # Entry point dan tema aplikasi
-├── models/
-│   └── product_model.dart # Model Product dan CartItem
-└── pages/
-    ├── pos_page.dart      # Halaman Point of Sale utama
-    └── catalog_page.dart  # Halaman katalog produk
-```
-
-### **Model Data**
-- **Product**: Berisi code, name, dan price
-- **CartItem**: Berisi Product dan quantity, dengan getter totalPrice
-
-## 📦 **Database Produk**
-
-Sistem menggunakan hardcoded database dengan produk contoh:
-- Air Mineral 600ml - Rp 5,000
-- Roti Coklat - Rp 12,000
-- Keripik Pedas - Rp 15,000
-- Kopi Botol - Rp 8,500
-
-## 🚀 **Cara Menjalankan**
-
-1. **Persiapan Environment**
-   ```bash
-   flutter doctor  # Pastikan Flutter terinstall dengan benar
-   ```
-
-2. **Install Dependencies**
-   ```bash
-   flutter pub get
-   ```
-
-3. **Jalankan Aplikasi**
-   ```bash
-   flutter run
-   ```
-
-4. **Build APK (opsional)**
-   ```bash
-   flutter build apk --release
-   ```
 
 ## 📱 **Cara Penggunaan**
 
@@ -116,22 +71,6 @@ Sistem menggunakan hardcoded database dengan produk contoh:
 - Android/iOS device atau emulator
 - Kamera untuk fitur scan QR
 
-## 🎯 **Fitur Mendatang**
 
-- [ ] Database lokal (SQLite)
-- [ ] Export laporan penjualan
-- [ ] Multiple payment methods
-- [ ] Inventory management
-- [ ] Receipt printing
-- [ ] Multi-language support
-
-## 👨‍💻 **Developer**
-
-Dibuat oleh: **IQC_2200016058**
-- NIM: 2200016058
-- Mata Kuliah: Pemrograman Mobile
-- Semester: 7
-
----
 
 **💡 Tips**: Scan QR code dari katalog untuk menambahkan produk ke keranjang dengan cepat!
