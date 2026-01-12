@@ -72,7 +72,3 @@ ditambahkan (FlutterFire CLI biasanya menempatkannya untuk Anda).
 - Untuk memigrasi data lokal ke Firestore, gunakan helper Firestore dan panggil
 	insert untuk setiap entry yang ada di local DB.
 - Periksa Firestore rules di Firebase Console sebelum production.
-
-## Kontak
-Lihat kode sumber di folder `lib/` untuk detail implementasi.
-
